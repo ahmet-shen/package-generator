@@ -40,7 +40,7 @@ if (! function_exists('configValue')) {
      *
      * @throws Exception
      */
-    function configValue(string $configKeyName, string $packageName = 'package-generator')
+    function configValue(string $configKeyName, string $packageName = 'package-generator'): mixed
     {
         $configKeyName = str($configKeyName)->lower()->snake();
 
