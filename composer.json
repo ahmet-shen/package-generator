@@ -5,6 +5,7 @@
         "ahmet-shen",
         "package-generator"
     ],
+    "version": "v0.0.0",
     "homepage": "https://github.com/ahmet-shen/package-generator",
     "license": "MIT",
     "type": "library",
