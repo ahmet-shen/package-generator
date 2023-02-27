@@ -1,10 +1,7 @@
 {
     "name": "ahmet-shen/package-generator",
     "description": "Simple package to quickly generate basic structure for other laravel packages.",
-    "keywords": [
-        "ahmet-shen",
-        "package-generator"
-    ],
+    "keywords": ["ahmet-shen", "package-generator"],
     "version": "v0.0.0",
     "homepage": "https://github.com/ahmet-shen/package-generator",
     "license": "MIT",
