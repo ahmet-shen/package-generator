@@ -24,8 +24,6 @@ class PackageGeneratorCommand extends Command
 
     /**
      * Current & new package name.
-     *
-     * @var array
      */
     protected array $packageNames = [
         'current' => 'package-generator',
@@ -34,8 +32,6 @@ class PackageGeneratorCommand extends Command
 
     /**
      * Current & new package path.
-     *
-     * @var array
      */
     protected array $packagePaths = [
         'current' => null,
@@ -44,8 +40,6 @@ class PackageGeneratorCommand extends Command
 
     /**
      * Messages.
-     *
-     * @var array
      */
     protected array $messages = [
         'setNewPackageName' => 'The new package name definition process completed successfully.',
