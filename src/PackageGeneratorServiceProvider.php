@@ -32,6 +32,7 @@ class PackageGeneratorServiceProvider extends ServiceProvider
         // Registering package commands.
         $this->commands([
             Console\InstallCommand::class,
+            Console\PackageGeneratorCommand::class,
         ]);
     }
 }
