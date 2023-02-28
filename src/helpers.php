@@ -8,8 +8,10 @@ if (! function_exists('packageName')) {
      */
     function packageName(string $packageName = 'package-generator'): mixed
     {
+        $packageGenerator = app('package-generator');
+
         return match ($packageName) {
-            'package-generator' => PackageGenerator::packageName(),
+            'package-generator' => $packageGenerator->packageName(),
             default => throw new Exception(
                 message: "$packageName is not supported yet.",
             ),
@@ -25,8 +27,10 @@ if (! function_exists('packageVersion')) {
      */
     function packageVersion(string $packageName = 'package-generator'): mixed
     {
+        $packageGenerator = app('package-generator');
+
         return match ($packageName) {
-            'package-generator' => PackageGenerator::packageVersion(),
+            'package-generator' => $packageGenerator->packageVersion(),
             default => throw new Exception(
                 message: "$packageName is not supported yet.",
             ),
@@ -44,8 +48,10 @@ if (! function_exists('configValue')) {
     {
         $configKeyName = str($configKeyName)->lower()->snake();
 
+        $packageGenerator = app('package-generator');
+
         return match ($packageName) {
-            'package-generator' => PackageGenerator::configValue($configKeyName),
+            'package-generator' => $packageGenerator->configValue($configKeyName),
             default => throw new Exception(
                 message: "$packageName is not supported yet.",
             ),
