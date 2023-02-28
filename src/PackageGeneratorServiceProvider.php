@@ -15,7 +15,7 @@ class PackageGeneratorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/package-generator.php', 'package-generator');
 
         // Register the main class to use with the facade.
-        $this->app->singleton('packageGenerator', function ($app) {
+        $this->app->singleton('package-generator', function ($app) {
             return $this->app->make(PackageGenerator::class);
         });
     }
