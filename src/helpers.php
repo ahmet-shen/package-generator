@@ -9,7 +9,7 @@ if (! function_exists('packageName')) {
     function packageName(string $packageName = 'package-generator'): mixed
     {
         $packageGenerator = app('package-generator');
-        
+
         return match ($packageName) {
             'package-generator' => $packageGenerator->packageName(),
             default => throw new Exception(
@@ -28,7 +28,7 @@ if (! function_exists('packageVersion')) {
     function packageVersion(string $packageName = 'package-generator'): mixed
     {
         $packageGenerator = app('package-generator');
-        
+
         return match ($packageName) {
             'package-generator' => $packageGenerator->packageVersion(),
             default => throw new Exception(
@@ -47,7 +47,7 @@ if (! function_exists('configValue')) {
     function configValue(string $configKeyName, string $packageName = 'package-generator'): mixed
     {
         $configKeyName = str($configKeyName)->lower()->snake();
-        
+
         $packageGenerator = app('package-generator');
 
         return match ($packageName) {
