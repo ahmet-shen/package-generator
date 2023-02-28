@@ -11,11 +11,11 @@ class PackageGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Automatically apply the package configuration.
+        // Automatically apply the package configuration..
         $this->mergeConfigFrom(__DIR__.'/../config/package-generator.php', 'package-generator');
 
-        // Register the main class to use with the facade.
-        $this->app->singleton('package-generator', function ($app) {
+        // Register the main class to use with the facade..
+        $this->app->singleton('package-generator', function () {
             return $this->app->make(PackageGenerator::class);
         });
     }
@@ -29,7 +29,7 @@ class PackageGeneratorServiceProvider extends ServiceProvider
             return;
         }
 
-        // Registering package commands.
+        // Registering package commands..
         $this->commands([
             Console\InstallCommand::class,
             Console\PackageGeneratorCommand::class,
