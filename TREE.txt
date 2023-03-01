@@ -1,0 +1,22 @@
+├── .editorconfig
+├── .gitignore
+├── CHANGELOG.md
+├── composer.json
+├── /config/
+│  └── package-generator.php
+├── /.github/
+│  ├── /workflows/
+│  │  ├── pint.yml
+│  │  └── static-analysis.yml
+├── LICENSE.md
+├── README.md
+├── /src/
+│  ├── /Console/
+│  │  ├── InstallCommand.php
+│  │  └── PackageGeneratorCommand.php
+│  ├── helpers.php
+│  ├── PackageGenerator.php
+│  ├── PackageGeneratorFacade.php
+│  └── PackageGeneratorServiceProvider.php
+├── TODO.md
+└── TREE.txt
