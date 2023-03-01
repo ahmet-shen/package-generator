@@ -13,53 +13,56 @@ class PackageGeneratorCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'package:generator {newPackageName=new-package}';
+    protected $signature = 'package:generator {vendorName=ahmet-shen} {packageName=package-name} {packageDescription=package-name description.}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate new package from ahmet-shen/package-generator';
+    protected $description = 'Generate a package from ahmet-shen/package-generator repository';
 
     /**
-     * Current & new package name.
+     * Package properties.
      */
-    protected array $packageNames = [
-        'current' => 'package-generator',
-        'new' => null,
+    protected array $packageProperties = [
+        'from' => [
+            'vendorName' => 'ahmet-shen',
+            'packageName' => 'package-generator',
+            'packageDescription' => 'Simple package to quickly generate basic structure for other laravel packages.',
+            'packagePath' => null,
+            'packageClassFileName' => 'PackageGenerator',
+        ],
+        'to' => [
+            'vendorName' => null,
+            'packageName' => null,
+            'packageDescription' => null,
+            'packagePath' => null,
+            'packageClassFileName' => null,
+        ],
     ];
 
     /**
-     * Current & new package path.
+     * Default messages.
      */
-    protected array $packagePaths = [
-        'current' => null,
-        'new' => null,
-    ];
-
-    /**
-     * Messages.
-     */
-    protected array $messages = [
-        'setNewPackageName' => 'The new package name definition process completed successfully.',
-        'setPackagePaths' => 'The package path definition process completed successfully.',
-        'checkNewPackageFolder' => 'The new package directory check completed successfully.',
-        'github' => 'Copying the github directory into the new package directory has been completed successfully.',
-        'configFile' => 'Copying the config file into the new package directory has been completed successfully.',
-        'installCommandFile' => 'Copying the src/Console/InstallCommand.php file into the new package directory has been completed successfully.',
-        'mainClassFile' => 'Copying the src/NewPackage.php file into the new package directory has been completed successfully.',
-        'facadeClassFile' => 'Copying the src/NewPackageFacade.php file into the new package directory has been completed successfully.',
-        'providerClassFile' => 'Copying the src/NewPackageServiceProvider.php file into the new package directory has been completed successfully.',
-        'helperFile' => 'Copying the src/helper.php file into the new package directory has been completed successfully.',
-        'editorconfig' => 'Copying the .editorconfig file into the new package directory has been completed successfully.',
-        'gitignore' => 'Copying the .gitignore file into the new package directory has been completed successfully.',
-        'changelogMd' => 'Copying the CHANGELOG.md file into the new package directory has been completed successfully.',
-        'licenseMd' => 'Copying the LICENSE.md file into the new package directory has been completed successfully.',
-        'readmeMd' => 'Copying the README.md file into the new package directory has been completed successfully.',
-        'todoMd' => 'Copying the TODO.md file into the new package directory has been completed successfully.',
-        'tree' => 'Copying the TREE.txt file into the new package directory has been completed successfully.',
-        'composerJson' => 'Copying the composer.json file into the new package directory has been completed successfully.',
+    protected array $defaultMessages = [
+        'setPackageProperties' => '01 -> The package properties definition process completed successfully.',
+        'checkPackageFolder' => '02 -> The package directory check completed successfully.',
+        'editorconfig' => '03 -> Copying the .editorconfig file into the package directory has been completed successfully.',
+        'gitignore' => '04 -> Copying the .gitignore file into the package directory has been completed successfully.',
+        'changelogMd' => '05 -> Copying the CHANGELOG.md file into the package directory has been completed successfully.',
+        'licenseMd' => '06 -> Copying the LICENSE.md file into the package directory has been completed successfully.',
+        'readmeMd' => '07 -> Copying the README.md file into the package directory has been completed successfully.',
+        'todoMd' => '08 -> Copying the TODO.md file into the package directory has been completed successfully.',
+        'tree' => '09 -> Copying the TREE.txt file into the package directory has been completed successfully.',
+        'composerJson' => '10 -> Copying the composer.json file into the package directory has been completed successfully.',
+        'github' => '11 -> Copying the .github directory into the package directory has been completed successfully.',
+        'configFile' => '12 -> Copying the config/package-generator.php file into the package directory has been completed successfully.',
+        'installCommandFile' => '13 -> Copying the src/Console/InstallCommand.php file into the package directory has been completed successfully.',
+        'mainClassFile' => '14 -> Copying the src/PackageGenerator.php file into the package directory has been completed successfully.',
+        'facadeClassFile' => '15 -> Copying the src/PackageGeneratorFacade.php file into the package directory has been completed successfully.',
+        'providerClassFile' => '16 -> Copying the src/PackageGeneratorServiceProvider.php file into the new package directory has been completed successfully.',
+        'helpersFile' => '17 -> Copying the src/helpers.php file into the new package directory has been completed successfully.',
     ];
 
     /**
@@ -68,22 +71,19 @@ class PackageGeneratorCommand extends Command
     public function handle(): void
     {
         // started..
-        $this->writeln('------');
+        $this->writeln('------------------------------------------------------------------------------------------');
 
-        // setNewPackageName..
-        $this->setNewPackageName();
+        // setPackageProperties..
+        $this->setPackageProperties();
 
-        // setPackagePaths..
-        $this->setPackagePaths();
+        // checkPackageFolder..
+        $this->checkPackageFolder();
 
-        // checkNewPackageFolder..
-        $this->checkNewPackageFolder();
-
-        // newPackageConfigurations..
-        $this->newPackageConfigurations();
+        // packageConfigurations..
+        $this->packageConfigurations();
 
         // finished..
-        $this->writeln('------');
+        $this->writeln('------------------------------------------------------------------------------------------');
     }
 
     /**
@@ -95,57 +95,52 @@ class PackageGeneratorCommand extends Command
     }
 
     /**
-     * Set new package name.
+     * Set package properties.
      */
-    protected function setNewPackageName(): void
+    protected function setPackageProperties(): void
     {
-        $this->packageNames['new'] = $this->argument('newPackageName');
+        $this->packageProperties['from']['packagePath'] = base_path('vendor/'.$this->packageProperties['from']['vendorName'].'/'.$this->packageProperties['from']['packageName']);
 
-        $this->writeln($this->messages['setNewPackageName']);
+        $this->packageProperties['to']['vendorName'] = Str::of($this->argument('vendorName'))->lower()->slug();
+        $this->packageProperties['to']['packageName'] = Str::of($this->argument('packageName'))->lower()->slug();
+        $this->packageProperties['to']['packageDescription'] = Str::of($this->argument('packageDescription'))->lower()->replace('-', ' ')->title();
+        $this->packageProperties['to']['packagePath'] = base_path('packages/'.$this->packageProperties['to']['vendorName'].'/'.$this->packageProperties['to']['packageName']);
+        $this->packageProperties['to']['packageClassFileName'] = Str::of($this->packageProperties['to']['packageName'])->lower()->title()->replace('-', '');
+
+        $this->writeln($this->defaultMessages['setPackageProperties']);
     }
 
     /**
-     * Set package paths.
+     * Check package folder.
      */
-    protected function setPackagePaths(): void
+    protected function checkPackageFolder(): void
     {
-        $this->packagePaths['current'] = base_path('vendor/ahmet-shen/'.$this->packageNames['current']);
+        $vendorFolderName = base_path('packages/'.$this->packageProperties['to']['vendorName']);
 
-        $this->packagePaths['new'] = base_path('packages/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug());
+        $packageFolderName = base_path('packages/'.$this->packageProperties['to']['vendorName'].'/'.$this->packageProperties['to']['packageName']);
 
-        $this->writeln($this->messages['setPackagePaths']);
-    }
-
-    /**
-     * Check new package folder.
-     */
-    protected function checkNewPackageFolder(): void
-    {
-        if (! (new Filesystem)->exists($this->packagePaths['new'])) {
-            (new Filesystem)->makeDirectory($this->packagePaths['new']);
+        // vendorName..
+        if (! (new Filesystem)->exists($vendorFolderName)) {
+            (new Filesystem)->makeDirectory($vendorFolderName);
         }
 
-        $this->writeln($this->messages['checkNewPackageFolder']);
+        // packageName..
+        if (! (new Filesystem)->exists($packageFolderName)) {
+            (new Filesystem)->makeDirectory($packageFolderName);
+        }
+
+        $this->writeln($this->defaultMessages['checkPackageFolder']);
     }
 
     /**
-     * New package configurations.
+     * Package configurations.
      */
-    protected function newPackageConfigurations(): void
+    protected function packageConfigurations(): void
     {
-        // .github..
-        $this->github();
-
-        // configFile..
-        $this->configFile();
-
-        // src..
-        $this->src();
-
         // .editorconfig..
         $this->editorconfig();
 
-        // gitignore..
+        // .gitignore..
         $this->gitignore();
 
         // CHANGELOG.md..
@@ -165,20 +160,127 @@ class PackageGeneratorCommand extends Command
 
         // composer.json..
         $this->composerJson();
+
+        // .github..
+        $this->github();
+
+        // configFile..
+        $this->configFile();
+
+        // src..
+        $this->src();
     }
 
     /**
-     * .github.
+     * .Editorconfig.
+     */
+    protected function editorconfig(): void
+    {
+        $fileName = '.editorconfig';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['editorconfig']);
+    }
+
+    /**
+     * .Gitignore.
+     */
+    protected function gitignore(): void
+    {
+        $fileName = '.gitignore';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['gitignore']);
+    }
+
+    /**
+     * Changelog.md.
+     */
+    protected function changelogMd(): void
+    {
+        $fileName = 'CHANGELOG.md';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['changelogMd']);
+    }
+
+    /**
+     * License.md.
+     */
+    protected function licenseMd(): void
+    {
+        $fileName = 'LICENSE.md';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['licenseMd']);
+    }
+
+    /**
+     * Readme.md.
+     */
+    protected function readmeMd(): void
+    {
+        $fileName = 'README.md';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['readmeMd']);
+    }
+
+    /**
+     * Todo.md.
+     */
+    protected function todoMd(): void
+    {
+        $fileName = 'TODO.md';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['todoMd']);
+    }
+
+    /**
+     * Tree.txt.
+     */
+    protected function tree(): void
+    {
+        $fileName = 'TREE.txt';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['tree']);
+    }
+
+    /**
+     * Composer.json.
+     */
+    protected function composerJson(): void
+    {
+        $fileName = 'composer.json';
+
+        $this->checkPackageFiles($fileName, $fileName);
+
+        $this->writeln($this->defaultMessages['composerJson']);
+    }
+
+    /**
+     * .Github.
      */
     protected function github(): void
     {
-        if ((new Filesystem)->exists($this->packagePaths['new'].'/.github')) {
-            (new Filesystem)->deleteDirectory($this->packagePaths['new'].'/.github');
+        $folderName = '.github';
+
+        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
+            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
         }
 
-        (new Filesystem)->copyDirectory($this->packagePaths['current'].'/.github', $this->packagePaths['new'].'/.github');
+        (new Filesystem)->copyDirectory($this->packageProperties['from']['packagePath'].'/'.$folderName, $this->packageProperties['to']['packagePath'].'/'.$folderName);
 
-        $this->writeln($this->messages['github']);
+        $this->writeln($this->defaultMessages['github']);
     }
 
     /**
@@ -186,15 +288,17 @@ class PackageGeneratorCommand extends Command
      */
     protected function configFile(): void
     {
-        if ((new Filesystem)->exists($this->packagePaths['new'].'/config')) {
-            (new Filesystem)->deleteDirectory($this->packagePaths['new'].'/config');
+        $folderName = 'config';
+
+        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
+            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
         }
 
-        (new Filesystem)->makeDirectory($this->packagePaths['new'].'/config');
+        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
 
-        $this->checkNewPackageFiles('config/'.$this->packageNames['current'].'.php', 'config/'.Str::of($this->packageNames['new'])->lower()->slug().'.php');
+        $this->checkPackageFiles($folderName.'/'.$this->packageProperties['from']['packageName'].'.php', $folderName.'/'.$this->packageProperties['to']['packageName'].'.php');
 
-        $this->writeln($this->messages['configFile']);
+        $this->writeln($this->defaultMessages['configFile']);
     }
 
     /**
@@ -202,11 +306,11 @@ class PackageGeneratorCommand extends Command
      */
     protected function src(): void
     {
-        if ((new Filesystem)->exists($this->packagePaths['new'].'/src')) {
-            (new Filesystem)->deleteDirectory($this->packagePaths['new'].'/src');
+        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/src')) {
+            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/src');
         }
 
-        (new Filesystem)->makeDirectory($this->packagePaths['new'].'/src');
+        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/src');
 
         $this->console();
 
@@ -216,7 +320,7 @@ class PackageGeneratorCommand extends Command
 
         $this->providerClassFile();
 
-        $this->helperFile();
+        $this->helpersFile();
     }
 
     /**
@@ -224,56 +328,13 @@ class PackageGeneratorCommand extends Command
      */
     protected function console(): void
     {
-        if ((new Filesystem)->exists($this->packagePaths['new'].'/src/Console')) {
-            (new Filesystem)->deleteDirectory($this->packagePaths['new'].'/src/Console');
+        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/src/Console')) {
+            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
         }
 
-        (new Filesystem)->makeDirectory($this->packagePaths['new'].'/src/Console');
+        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
 
         $this->installCommandFile();
-    }
-
-    /**
-     * Install command file.
-     */
-    protected function installCommandFile(): void
-    {
-        $this->checkNewPackageFiles(
-            'src/Console/InstallCommand.php',
-            'src/Console/InstallCommand.php'
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'\\',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'\\',
-            $this->packagePaths['new'].'/'.'src/Console/InstallCommand.php'
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->camel().':install',
-            Str::of($this->packageNames['new'])->lower()->title()->camel().':install',
-            $this->packagePaths['new'].'/'.'src/Console/InstallCommand.php'
-        );
-
-        $this->replaceInFile(
-            'Install the '.Str::of($this->packageNames['current'])->lower()->title()->camel().' resources',
-            'Install the '.Str::of($this->packageNames['new'])->lower()->title()->camel().' resources',
-            $this->packagePaths['new'].'/'.'src/Console/InstallCommand.php'
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->camel().' scaffolding installed successfully.',
-            Str::of($this->packageNames['new'])->lower()->title()->camel().' scaffolding installed successfully.',
-            $this->packagePaths['new'].'/'.'src/Console/InstallCommand.php'
-        );
-
-        $this->replaceInFile(
-            $this->packageNames['current'].'.php',
-            Str::of($this->packageNames['new'])->lower()->slug().'.php',
-            $this->packagePaths['new'].'/'.'src/Console/InstallCommand.php'
-        );
-
-        $this->writeln($this->messages['installCommandFile']);
     }
 
     /**
@@ -281,30 +342,9 @@ class PackageGeneratorCommand extends Command
      */
     protected function mainClassFile(): void
     {
-        $this->checkNewPackageFiles(
-            'src/'.Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'.php',
-            'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'.php'
-        );
+        $this->checkPackageFiles('src/'.$this->packageProperties['from']['packageClassFileName'].'.php', 'src/'.$this->packageProperties['to']['packageClassFileName'].'.php');
 
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').';',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').';',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'.php'
-        );
-
-        $this->replaceInFile(
-            'class '.Str::of($this->packageNames['current'])->lower()->title()->replace('-', ''),
-            'class '.Str::of($this->packageNames['new'])->lower()->title()->replace('-', ''),
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'.php'
-        );
-
-        $this->replaceInFile(
-            $this->packageNames['current'],
-            Str::of($this->packageNames['new'])->lower()->slug(),
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'.php'
-        );
-
-        $this->writeln($this->messages['mainClassFile']);
+        $this->writeln($this->defaultMessages['mainClassFile']);
     }
 
     /**
@@ -312,30 +352,9 @@ class PackageGeneratorCommand extends Command
      */
     protected function facadeClassFile(): void
     {
-        $this->checkNewPackageFiles(
-            'src/'.Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'Facade.php',
-            'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'Facade.php'
-        );
+        $this->checkPackageFiles('src/'.$this->packageProperties['from']['packageClassFileName'].'Facade.php', 'src/'.$this->packageProperties['to']['packageClassFileName'].'Facade.php');
 
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').';',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').';',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'Facade.php'
-        );
-
-        $this->replaceInFile(
-            'class '.Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'Facade',
-            'class '.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'Facade',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'Facade.php'
-        );
-
-        $this->replaceInFile(
-            $this->packageNames['current'],
-            Str::of($this->packageNames['new'])->lower()->slug(),
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'Facade.php'
-        );
-
-        $this->writeln($this->messages['facadeClassFile']);
+        $this->writeln($this->defaultMessages['facadeClassFile']);
     }
 
     /**
@@ -343,268 +362,45 @@ class PackageGeneratorCommand extends Command
      */
     protected function providerClassFile(): void
     {
-        $this->checkNewPackageFiles(
-            'src/'.Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'ServiceProvider.php',
-            'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
+        $this->checkPackageFiles('src/'.$this->packageProperties['from']['packageClassFileName'].'ServiceProvider.php', 'src/'.$this->packageProperties['to']['packageClassFileName'].'ServiceProvider.php');
 
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').';',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').';',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
-
-        $this->replaceInFile(
-            'class '.Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'ServiceProvider',
-            'class '.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
-
-        $this->replaceInFile(
-            $this->packageNames['current'],
-            Str::of($this->packageNames['new'])->lower()->slug(),
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', '').'::class',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'::class',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
-
-        $this->replaceInFile(
-            '$this->commands([
-        Console\InstallCommand::class,
-        Console\PackageGeneratorCommand::class,
-    ]);',
-            '$this->commands([
-        Console\InstallCommand::class,
-    ]);',
-            $this->packagePaths['new'].'/'.'src/'.Str::of($this->packageNames['new'])->lower()->title()->replace('-', '').'ServiceProvider.php'
-        );
-
-        $this->writeln($this->messages['providerClassFile']);
+        $this->writeln($this->defaultMessages['providerClassFile']);
     }
 
     /**
-     * Helper file.
+     * Helpers file.
      */
-    protected function helperFile(): void
+    protected function helpersFile(): void
     {
-        $this->checkNewPackageFiles(
-            'src/helpers.php',
-            'src/helpers.php'
-        );
+        $fileName = 'src/helpers.php';
 
-        $this->replaceInFile(
-            $this->packageNames['current'],
-            Str::of($this->packageNames['new'])->lower()->slug(),
-            $this->packagePaths['new'].'/'.'src/helpers.php'
-        );
+        $this->checkPackageFiles($fileName, $fileName);
 
-        $this->replaceInFile(
-            '$'.Str::of($this->packageNames['current'])->lower()->title()->camel(),
-            '$'.Str::of($this->packageNames['new'])->lower()->title()->camel(),
-            $this->packagePaths['new'].'/'.'src/helpers.php'
-        );
-
-        $this->writeln($this->messages['helperFile']);
+        $this->writeln($this->defaultMessages['helpersFile']);
     }
 
     /**
-     * .editorconfig.
+     * Install command file.
      */
-    protected function editorconfig(): void
+    protected function installCommandFile(): void
     {
-        $fileName = '.editorconfig';
+        $fileName = 'src/Console/InstallCommand.php';
 
-        $this->checkNewPackageFiles($fileName, $fileName);
+        $this->checkPackageFiles($fileName, $fileName);
 
-        $this->writeln($this->messages['editorconfig']);
+        $this->writeln($this->defaultMessages['installCommandFile']);
     }
 
     /**
-     * gitignore.
+     * Check package files.
      */
-    protected function gitignore(): void
+    protected function checkPackageFiles(string $fromFileName, string $toFileName): void
     {
-        $fileName = '.gitignore';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->writeln($this->messages['gitignore']);
-    }
-
-    /**
-     * CHANGELOG.md.
-     */
-    protected function changelogMd(): void
-    {
-        $fileName = 'CHANGELOG.md';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->replaceInFile('`'.$this->packageNames['current'].'`', '`'.Str::of($this->packageNames['new'])->lower()->slug().'`', $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            '[Unreleased](https://github.com/ahmet-shen/'.$this->packageNames['current'].')',
-            '[Unreleased](https://github.com/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().')',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            '[v0.0.0](https://github.com/ahmet-shen/'.$this->packageNames['current'].') - 202X-',
-            '[v0.0.0](https://github.com/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().') - '.date('Y').'-',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->writeln($this->messages['changelogMd']);
-    }
-
-    /**
-     * LICENSE.md.
-     */
-    protected function licenseMd(): void
-    {
-        $fileName = 'LICENSE.md';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->writeln($this->messages['licenseMd']);
-    }
-
-    /**
-     * README.md.
-     */
-    protected function readmeMd(): void
-    {
-        $fileName = 'README.md';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->replaceInFile(
-            $this->packageNames['current'],
-            Str::of($this->packageNames['new'])->lower()->slug(),
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            'Simple+package+to+quickly+generate+basic+structure+for+other+laravel+packages.',
-            Str::of($this->packageNames['new'])->lower()->slug().' description.',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            'Simple package to quickly generate basic structure for other laravel packages.',
-            Str::of($this->packageNames['new'])->lower()->slug().' description.',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->camel().':install',
-            Str::of($this->packageNames['new'])->lower()->title()->camel().':install',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', ' ').' Page',
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', ' ').' Page',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            'This package was generated using the [new-package](https://github.com/ahmet-shen/new-package).',
-            'This package was generated using the ['.$this->packageNames['current'].'](https://github.com/ahmet-shen/'.$this->packageNames['current'].').',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->writeln($this->messages['readmeMd']);
-    }
-
-    /**
-     * Todo.md
-     */
-    protected function todoMd(): void
-    {
-        $fileName = 'TODO.md';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->replaceInFile('`'.$this->packageNames['current'].'`', '`'.Str::of($this->packageNames['new'])->lower()->slug().'`', $this->packagePaths['new'].'/'.$fileName);
-
-        $this->writeln($this->messages['todoMd']);
-    }
-
-    /**
-     * TREE.txt.
-     */
-    protected function tree(): void
-    {
-        $fileName = 'TREE.txt';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->writeln($this->messages['tree']);
-    }
-
-    /**
-     * Composer.json
-     */
-    protected function composerJson(): void
-    {
-        $fileName = 'composer.json';
-
-        $this->checkNewPackageFiles($fileName, $fileName);
-
-        $this->replaceInFile(
-            '"name": "ahmet-shen/'.$this->packageNames['current'].'",',
-            '"name": "ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().'",',
-            $this->packagePaths['new'].'/'.$fileName
-        );
-
-        $this->replaceInFile(
-            '"description": "Simple package to quickly generate basic structure for other laravel packages.",',
-            '"description": "'.Str::of($this->packageNames['new'])->lower()->slug().' description.",',
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            '"keywords": ["ahmet-shen", "'.$this->packageNames['current'].'"],',
-            '"keywords": ["ahmet-shen", "'.Str::of($this->packageNames['new'])->lower()->slug().'"],',
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            '"homepage": "https://github.com/ahmet-shen/'.$this->packageNames['current'].'",',
-            '"homepage": "https://github.com/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().'",',
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            '"issues": "https://github.com/ahmet-shen/'.$this->packageNames['current'].'/issues",',
-            '"issues": "https://github.com/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().'/issues",',
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            '"source": "https://github.com/ahmet-shen/'.$this->packageNames['current'].'"',
-            '"source": "https://github.com/ahmet-shen/'.Str::of($this->packageNames['new'])->lower()->slug().'"',
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->replaceInFile(
-            Str::of($this->packageNames['current'])->lower()->title()->replace('-', ''),
-            Str::of($this->packageNames['new'])->lower()->title()->replace('-', ''),
-            $this->packagePaths['new'].'/'.$fileName);
-
-        $this->writeln($this->messages['composerJson']);
-    }
-
-    /**
-     * Check new package files.
-     */
-    protected function checkNewPackageFiles(string $currentFileName, string $newFileName): void
-    {
-        if ((new Filesystem)->exists($this->packagePaths['new'].'/'.$newFileName)) {
-            (new Filesystem)->delete($this->packagePaths['new'].'/'.$newFileName);
+        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$toFileName)) {
+            (new Filesystem)->delete($this->packageProperties['to']['packagePath'].'/'.$toFileName);
         }
 
-        (new Filesystem)->copy($this->packagePaths['current'].'/'.$currentFileName, $this->packagePaths['new'].'/'.$newFileName);
+        (new Filesystem)->copy($this->packageProperties['from']['packagePath'].'/'.$fromFileName, $this->packageProperties['to']['packagePath'].'/'.$toFileName);
     }
 
     /**
