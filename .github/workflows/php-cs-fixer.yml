@@ -1,6 +1,6 @@
 name: Check & Fix Styling
 
-on: pull_request
+on: [pull_request]
 
 jobs:
     php-cs-fixer:
@@ -13,9 +13,9 @@ jobs:
                   ref: ${{ github.head_ref }}
 
             - name: Check & Fix Styling
-              uses: docker://oskarstark/php-cs-fixer-ga:2.19.0
+              uses: docker://oskarstark/php-cs-fixer-ga
               with:
-                  args: --config=.php_cs.dist --allow-risky=yes
+                  args: --config=.php-cs-fixer.php --allow-risky=yes
 
             - name: Commit Changes
               uses: stefanzweifel/git-auto-commit-action@v4.15.4
