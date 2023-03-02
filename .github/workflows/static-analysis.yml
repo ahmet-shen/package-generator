@@ -1,6 +1,6 @@
-name: Static Analysis
+name: PHPStan Static Analysis
 
-on: pull_request
+on: [pull_request]
 
 jobs:
   phpstan:
