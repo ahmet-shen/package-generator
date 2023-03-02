@@ -1,21 +1,20 @@
 name: Normalize composer.json
-
-on: [pull_request]
-
+'on':
+  - pull_request
 jobs:
   normalize:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
       - name: Normalize composer.json
-        run: |
-          composer global config --no-plugins allow-plugins.ergebnis/composer-normalize true
-          composer global require ergebnis/composer-normalize
-          composer normalize
+        run: >
+          composer global config --no-plugins
+          allow-plugins.ergebnis/composer-normalize true
 
+          composer global require ergebnis/composer-normalize
+
+          composer normalize
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
