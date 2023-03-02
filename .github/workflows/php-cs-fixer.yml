@@ -13,7 +13,7 @@ jobs:
                   ref: ${{ github.head_ref }}
 
             - name: Check & Fix Styling
-              uses: docker://oskarstark/php-cs-fixer-ga:2.19.0
+              uses: docker://oskarstark/php-cs-fixer-ga
               with:
                   args: --config=.php-cs-fixer.php --allow-risky=yes
 
