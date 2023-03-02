@@ -6,10 +6,10 @@ jobs:
     normalize:
         runs-on: ubuntu-latest
         steps:
-            - name: Git checkout
+            - name: Git Checkout
               uses: actions/checkout@v3
 
-            - name: normalize composer.json
+            - name: Normalize composer.json
               run: |
                   composer global config --no-plugins allow-plugins.ergebnis/composer-normalize true
                   composer global require ergebnis/composer-normalize
