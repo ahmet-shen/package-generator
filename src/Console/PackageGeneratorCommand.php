@@ -120,13 +120,13 @@ class PackageGeneratorCommand extends Command
         $packageFolderName = base_path('packages/'.$this->packageProperties['to']['vendorName'].'/'.$this->packageProperties['to']['packageName']);
 
         // vendorName..
-        if (! (new Filesystem)->exists($vendorFolderName)) {
-            (new Filesystem)->makeDirectory($vendorFolderName);
+        if (! (new Filesystem())->exists($vendorFolderName)) {
+            (new Filesystem())->makeDirectory($vendorFolderName);
         }
 
         // packageName..
-        if (! (new Filesystem)->exists($packageFolderName)) {
-            (new Filesystem)->makeDirectory($packageFolderName);
+        if (! (new Filesystem())->exists($packageFolderName)) {
+            (new Filesystem())->makeDirectory($packageFolderName);
         }
 
         $this->writeln($this->defaultMessages['checkPackageFolder']);
@@ -274,11 +274,11 @@ class PackageGeneratorCommand extends Command
     {
         $folderName = '.github';
 
-        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
-            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
+        if ((new Filesystem())->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
+            (new Filesystem())->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
         }
 
-        (new Filesystem)->copyDirectory($this->packageProperties['from']['packagePath'].'/'.$folderName, $this->packageProperties['to']['packagePath'].'/'.$folderName);
+        (new Filesystem())->copyDirectory($this->packageProperties['from']['packagePath'].'/'.$folderName, $this->packageProperties['to']['packagePath'].'/'.$folderName);
 
         $this->writeln($this->defaultMessages['github']);
     }
@@ -290,11 +290,11 @@ class PackageGeneratorCommand extends Command
     {
         $folderName = 'config';
 
-        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
-            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
+        if ((new Filesystem())->exists($this->packageProperties['to']['packagePath'].'/'.$folderName)) {
+            (new Filesystem())->deleteDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
         }
 
-        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
+        (new Filesystem())->makeDirectory($this->packageProperties['to']['packagePath'].'/'.$folderName);
 
         $this->checkPackageFiles($folderName.'/'.$this->packageProperties['from']['packageName'].'.php', $folderName.'/'.$this->packageProperties['to']['packageName'].'.php');
 
@@ -306,11 +306,11 @@ class PackageGeneratorCommand extends Command
      */
     protected function src(): void
     {
-        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/src')) {
-            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/src');
+        if ((new Filesystem())->exists($this->packageProperties['to']['packagePath'].'/src')) {
+            (new Filesystem())->deleteDirectory($this->packageProperties['to']['packagePath'].'/src');
         }
 
-        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/src');
+        (new Filesystem())->makeDirectory($this->packageProperties['to']['packagePath'].'/src');
 
         $this->console();
 
@@ -328,11 +328,11 @@ class PackageGeneratorCommand extends Command
      */
     protected function console(): void
     {
-        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/src/Console')) {
-            (new Filesystem)->deleteDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
+        if ((new Filesystem())->exists($this->packageProperties['to']['packagePath'].'/src/Console')) {
+            (new Filesystem())->deleteDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
         }
 
-        (new Filesystem)->makeDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
+        (new Filesystem())->makeDirectory($this->packageProperties['to']['packagePath'].'/src/Console');
 
         $this->installCommandFile();
     }
@@ -396,11 +396,11 @@ class PackageGeneratorCommand extends Command
      */
     protected function checkPackageFiles(string $fromFileName, string $toFileName): void
     {
-        if ((new Filesystem)->exists($this->packageProperties['to']['packagePath'].'/'.$toFileName)) {
-            (new Filesystem)->delete($this->packageProperties['to']['packagePath'].'/'.$toFileName);
+        if ((new Filesystem())->exists($this->packageProperties['to']['packagePath'].'/'.$toFileName)) {
+            (new Filesystem())->delete($this->packageProperties['to']['packagePath'].'/'.$toFileName);
         }
 
-        (new Filesystem)->copy($this->packageProperties['from']['packagePath'].'/'.$fromFileName, $this->packageProperties['to']['packagePath'].'/'.$toFileName);
+        (new Filesystem())->copy($this->packageProperties['from']['packagePath'].'/'.$fromFileName, $this->packageProperties['to']['packagePath'].'/'.$toFileName);
     }
 
     /**
@@ -408,6 +408,6 @@ class PackageGeneratorCommand extends Command
      */
     protected function replaceInFile(string $search, string $replace, string $path): void
     {
-        (new Filesystem)->replaceInFile($search, $replace, $path);
+        (new Filesystem())->replaceInFile($search, $replace, $path);
     }
 }
