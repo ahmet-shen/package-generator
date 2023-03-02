@@ -1,4 +1,4 @@
-name: Fix PHP Code Style
+name: Laravel Pint
 
 on: [pull_request]
 
@@ -12,10 +12,10 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Fix PHP Code Style
+      - name: Laravel Pint
         uses: aglipanci/laravel-pint-action@v2
 
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-            commit_message: Fix PHP Code Style
+            commit_message: Laravel Pint
