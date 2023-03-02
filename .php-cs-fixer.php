@@ -164,4 +164,4 @@ return (new Config)
     ->setRiskyAllowed(true)
     ->setLineEnding("\n")
     ->setIndent(str_repeat(' ', 4))
-    ->setUsingCache(true);
+    ->setUsingCache(false);
