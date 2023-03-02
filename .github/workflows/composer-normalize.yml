@@ -6,7 +6,7 @@ jobs:
     normalize:
         runs-on: ubuntu-latest
         steps:
-            - name: Git Checkout
+            - name: Checkout Code
               uses: actions/checkout@v3
 
             - name: Normalize composer.json
