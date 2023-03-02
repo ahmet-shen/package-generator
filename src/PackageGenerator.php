@@ -9,14 +9,14 @@ class PackageGenerator
      *
      * @var string
      */
-    const NAME = 'package-generator';
+    public const NAME = 'package-generator';
 
     /**
      * The package version.
      *
      * @var string
      */
-    const VERSION = 'v0.0.0';
+    public const VERSION = 'v0.0.0';
 
     /**
      * Get the name of the package.

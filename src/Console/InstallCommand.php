@@ -38,6 +38,6 @@ class InstallCommand extends Command
      */
     protected function configFiles(): void
     {
-        (new Filesystem)->copy(__DIR__.'/../../config/package-generator.php', config_path('package-generator.php'));
+        (new Filesystem())->copy(__DIR__.'/../../config/package-generator.php', config_path('package-generator.php'));
     }
 }
