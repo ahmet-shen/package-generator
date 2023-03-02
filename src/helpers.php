@@ -13,7 +13,7 @@ if (! function_exists('packageName')) {
         return match ($packageName) {
             'package-generator' => $packageGenerator->packageName(),
             default => throw new Exception(
-                message: "$packageName is not supported yet.",
+                message: $packageName.' is not supported yet.',
             ),
         };
     }
@@ -32,7 +32,7 @@ if (! function_exists('packageVersion')) {
         return match ($packageName) {
             'package-generator' => $packageGenerator->packageVersion(),
             default => throw new Exception(
-                message: "$packageName is not supported yet.",
+                message: $packageName.' is not supported yet.',
             ),
         };
     }
@@ -53,7 +53,7 @@ if (! function_exists('configValue')) {
         return match ($packageName) {
             'package-generator' => $packageGenerator->configValue($configKeyName),
             default => throw new Exception(
-                message: "$packageName is not supported yet.",
+                message: $packageName.' is not supported yet.',
             ),
         };
     }
