@@ -1,5 +1,7 @@
 name: Laravel Pint
+
 on: [pull_request]
+
 jobs:
   pint:
     runs-on: ubuntu-latest
